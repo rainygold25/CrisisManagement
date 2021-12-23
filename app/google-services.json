@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "687757436859",
+    "project_id": "crisis-management-c0782",
+    "storage_bucket": "crisis-management-c0782.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:687757436859:android:ae4244294b65127b47069e",
+        "android_client_info": {
+          "package_name": "com.example.crisismanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "687757436859-kqpbr1fsjh64ojn63bngu5rjmiphof76.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH35pDkV6CWtl29rumBNNh7gyMi8E1tQ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "687757436859-kqpbr1fsjh64ojn63bngu5rjmiphof76.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

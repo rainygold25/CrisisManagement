@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/button_post_resources"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/button_search_resources"
+        android:text="Post Resources" />
+
+    <Button
+        android:id="@+id/button_search_resources"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="Search Resources" />
+
+    <Button
+        android:id="@+id/button_send_location"
+        android:layout_below="@+id/button_search_resources"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send Location" />
+
+</RelativeLayout>
