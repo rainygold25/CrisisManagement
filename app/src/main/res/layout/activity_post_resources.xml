@@ -30,19 +30,19 @@
                 app:srcCompat="@drawable/ic_linked_camera_black_24dp" />
 
             <EditText
+                android:id="@+id/editText_Name"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:hint="Name"
-                android:ems="10"
-                android:layout_marginTop="41dp"
-                android:id="@+id/editText_Name"
                 android:layout_below="@+id/imageView_PhotoSlot"
                 android:layout_alignParentEnd="true"
-                android:textColorHint="@android:color/black"
-                android:textColorLink="@android:color/holo_green_light"
+                android:layout_marginTop="41dp"
+                android:backgroundTint="@android:color/black"
+                android:ems="10"
+                android:hint="Name"
+                android:inputType="textPersonName"
                 android:textColorHighlight="@android:color/holo_green_light"
-                android:backgroundTint="@android:color/black" />
+                android:textColorHint="@android:color/black"
+                android:textColorLink="@android:color/holo_green_light" />
 
             <EditText
                 android:id="@+id/editText_Address"
@@ -83,14 +83,14 @@
                 app:srcCompat="@android:drawable/ic_input_add" />
 
             <ImageView
+                android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_person_black_24dp"
-                android:layout_marginTop="10dp"
                 android:layout_alignTop="@+id/editText_Name"
-                android:id="@+id/imageView"
                 android:layout_alignParentLeft="true"
-                android:layout_toStartOf="@+id/editText_Name" />
+                android:layout_marginTop="10dp"
+                android:layout_toStartOf="@+id/editText_Name"
+                app:srcCompat="@drawable/ic_person_black_24dp" />
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -115,13 +115,14 @@
                 android:id="@+id/imageView3" />
 
             <TextView
-                android:text="Name"
+                android:id="@+id/textView_Name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="318dp"
-                android:id="@+id/textView_Name"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="215dp"
+                android:text="Name"
                 android:textColor="@android:color/holo_green_dark" />
 
             <TextView
