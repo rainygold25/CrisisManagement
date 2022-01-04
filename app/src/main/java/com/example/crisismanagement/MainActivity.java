@@ -116,16 +116,22 @@ public class MainActivity extends AppCompatActivity {
                     while (cursor.moveToNext()) {
                         String id = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
                         String name = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
-                        String noteWhere = ContactsContract.Data.CONTACT_ID + " = ? AND" + ContactsContract.Data.MIMETYPE + " = ?";
+                        String noteWhere = ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?";
                         String[] noteWhereParams = new String[] {id, ContactsContract.CommonDataKinds.Note.CONTENT_ITEM_TYPE};
-                        /*Cursor noteCur = resolver.query(ContactsContract.Data.CONTENT_URI, null, noteWhere, noteWhereParams, null);
+                        Cursor noteCur = resolver.query(ContactsContract.Data.CONTENT_URI, null, noteWhere, noteWhereParams, null);
                         while (noteCur.moveToNext()) {
-                            note = noteCur.getString
-                        }*/
+                            note = noteCur.getString(noteCur.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Note.NOTE));
+                            if (note != null) {
+                                Log.d("Notes", note);
+                            } else {
+                                note = "";
+                            }
+                        }
                         Cursor phoneCursor = resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[] {id}, null);
                         while (phoneCursor.moveToNext()) {
                             String phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                            if (note.equalsIgnoreCase("Emergency")) {
+                            Log.d("contacts", phoneNumber);
+                            if (note.toLowerCase().contains("emergency")) {
                                 final_phone.add(phoneNumber + ", ");
                             }
                         }
@@ -138,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     total_num = total_num.substring(0, total_num.length() - 1);
+                    while (temp.equals("")) {
+                        // Do nothing.
+                    }
                     String message = "I need help. " + Uri.parse(location_str + temp);
                     Uri sendSMSTo = Uri.parse("smsto:" + total_num);
                     Intent intent = new Intent(Intent.ACTION_SENDTO, sendSMSTo);
