@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:id="@+id/cardView_resource_item"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/cardRelative">
+
+            <ImageView
+                android:id="@+id/cardView_resource_item_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_linked_camera_black_24dp" />
+
+            <TextView
+                android:text="Main Description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView_Date"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="20dp"
+                android:textSize="15dp"
+                android:id="@+id/textView_MainName"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:text="Address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="22dp"
+                android:layout_marginBottom="39dp"
+                android:layout_below="@+id/textView_MainName"
+                android:id="@+id/textView_address" />
+
+            <TextView
+                android:text="Contact Information"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_contact"
+                android:layout_marginTop="17dp"
+                android:textSize="10dp"
+                android:layout_below="@+id/textView_MainName"
+                android:layout_alignStart="@+id/textView_address" />
+
+            <TextView
+                android:text="mm/dd/yy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="280dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/cardView_resource_item_image"
+                android:id="@+id/textView_Date" />
+
+            <TextView
+                android:id="@+id/textView_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/textView_contact"
+                android:text="Distance"
+
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="20dp" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
