@@ -84,6 +84,8 @@ public class SearchResources extends AppCompatActivity {
                                         DataSnapshot itemSnapshot = items_iterator.next();
                                         if (itemSnapshot.getValue().toString().toLowerCase().contains(search_text.toLowerCase())) {
                                             found_item = true;
+                                        } else if (search_text.toLowerCase().contains(itemSnapshot.getValue().toString().toLowerCase())) {
+                                            found_item = true;
                                         }
                                     }
                                     if (!found_item) {
