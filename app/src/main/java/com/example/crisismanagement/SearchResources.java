@@ -2,10 +2,20 @@ package com.example.crisismanagement;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,10 +26,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class SearchResources extends AppCompatActivity {
     RecyclerView recView_result;
@@ -28,6 +47,10 @@ public class SearchResources extends AppCompatActivity {
     DatabaseReference mDatabase;
     List<resourceItem> resourceItemList;
     resourceAdapter adapter;
+    String API_KEY = "AIzaSyBcRVo6fkmdbqDO8chiYo3MK1Css1IseSU";
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    String curr_loc = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +65,48 @@ public class SearchResources extends AppCompatActivity {
         recView_result.setHasFixedSize(true);
         recView_result.setLayoutManager(new LinearLayoutManager(this));
 
-
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
 
         editText_search_text = (EditText) findViewById(R.id.editText_searchResource);
         button_search = (Button) findViewById(R.id.button_search);
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                curr_loc = location.getLatitude() + "," + location.getLongitude();
+                Log.d("My Location", curr_loc);
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        };
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.INTERNET
+                }, 10);
+            } else {
+                locationManager.requestLocationUpdates("gps", 1000, 1, locationListener);
+            }
+        } else {
+            locationManager.requestLocationUpdates("gps", 1000, 1, locationListener);
+        }
 
         button_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +123,7 @@ public class SearchResources extends AppCompatActivity {
                             String date = "";
                             String contact_info = "";
                             String geo_location = "";
+                            String distance = "";
                             Iterator<DataSnapshot> postings_iterator = dataSnapshot.getChildren().iterator();
                             boolean matches_search_text = true;
                             while (postings_iterator.hasNext() && matches_search_text) {
@@ -98,8 +160,27 @@ public class SearchResources extends AppCompatActivity {
                                     String[] lat_long_str = new String[2];
                                     lat_long_str = geo_location.split(" ");
                                     //TODO: calculate distance
+                                    while (curr_loc.length() == 0) {
+                                        //Do nothing.
+                                    }
+                                    String[] curr_lat_long_str = new String[2];
+                                    curr_lat_long_str = curr_loc.split(",");
+                                    String url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + curr_lat_long_str[0] + "%2C" + curr_lat_long_str[1] + "&destinations=side_of_road%3A" + lat_long_str[0] + "%2C" + lat_long_str[1] + "&key=" + API_KEY;
+                                    Log.d("httpurl", url);
+                                    Request request = new Request.Builder()
+                                            .url(url)
+                                            .method("GET", null)
+                                            .build();
+                                    try {
+                                        Response response = client.newCall(request).execute();
+                                        ResponseBody responseBody = response.body();
+                                        JSONObject jsonObject = new JSONObject(responseBody.toString());
+                                        distance = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("distance").getString("text");
+                                    } catch (IOException | JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
-                                resourceItem curr_item = new resourceItem(name, address, contact_info, "", image, "");
+                                resourceItem curr_item = new resourceItem(name, address, contact_info, "", image, distance);
                                 resourceItemList.add(curr_item);
                             }
                         }
@@ -116,5 +197,26 @@ public class SearchResources extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 10:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    locationManager.requestLocationUpdates("gps", 1000, 1, locationListener);
+                }
+                return;
+        }
     }
 }
