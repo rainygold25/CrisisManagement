@@ -160,6 +160,7 @@ public class SearchResources extends AppCompatActivity {
                                     String[] lat_long_str = new String[2];
                                     lat_long_str = geo_location.split(" ");
                                     //TODO: calculate distance
+                                    Log.d("curr_loc", curr_loc);
                                     while (curr_loc.length() == 0) {
                                         //Do nothing.
                                     }

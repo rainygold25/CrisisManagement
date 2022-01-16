@@ -5,7 +5,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,6 +16,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
@@ -33,6 +36,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +68,11 @@ public class PostResources extends AppCompatActivity {
     private LocationManager locationManager;
     private LocationListener locationListener;
     String location_str;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,7 +287,32 @@ public class PostResources extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0) {
+            verifyStoragePermissions(PostResources.this);
             Bitmap theImage = (Bitmap) data.getExtras().get("data");
+            //File file = new File(Environment.getExternalStorageDirectory()
+                    //+ File.separator + "picture.jpg");
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            File dir = new File(getFilesDir(), "/images");
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+            File file = new File(dir.getAbsolutePath() + "/picture.jpg");
+            Log.d("absolute path", dir.getAbsolutePath() + "/picture.jpg");
+            try {
+                //file.mkdirs();
+                //file.createNewFile();
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                FileOutputStream out = new FileOutputStream(file);
+                theImage.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
+                // PNG is a lossless format, the compression factor (100) is ignored
+                out.close();
+                Log.d("no picture error", "none");
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("picture error", e.toString());
+            }
             ImageView image = (ImageView) findViewById(R.id.imageView_PhotoSlot);
             image.setImageBitmap(theImage);
             str_photo = BitMapToString(theImage);
@@ -305,5 +341,26 @@ public class PostResources extends AppCompatActivity {
             return;
         }
         locationManager.requestLocationUpdates("gps", 1000, 1, locationListener);
+    }
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 }
