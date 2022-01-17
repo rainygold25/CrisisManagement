@@ -34,14 +34,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class SearchResources extends AppCompatActivity {
-    RecyclerView recView_result;
+    public static RecyclerView recView_result;
     EditText editText_search_text;
     Button button_search;
     DatabaseReference mDatabase;
@@ -156,6 +159,7 @@ public class SearchResources extends AppCompatActivity {
                                 }
                             }
                             if (matches_search_text) {
+                                Log.d("geo_location", geo_location);
                                 if (geo_location.length() > 0) {
                                     String[] lat_long_str = new String[2];
                                     lat_long_str = geo_location.split(" ");
@@ -168,23 +172,25 @@ public class SearchResources extends AppCompatActivity {
                                     curr_lat_long_str = curr_loc.split(",");
                                     String url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + curr_lat_long_str[0] + "%2C" + curr_lat_long_str[1] + "&destinations=side_of_road%3A" + lat_long_str[0] + "%2C" + lat_long_str[1] + "&key=" + API_KEY;
                                     Log.d("httpurl", url);
-                                    Request request = new Request.Builder()
-                                            .url(url)
-                                            .method("GET", null)
-                                            .build();
+                                    DownloadTaskAddress da = new DownloadTaskAddress();
                                     try {
-                                        Response response = client.newCall(request).execute();
-                                        ResponseBody responseBody = response.body();
-                                        JSONObject jsonObject = new JSONObject(responseBody.toString());
+                                        String result = da.execute(url).get();
+                                        JSONObject jsonObject = new JSONObject(result);
                                         distance = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("distance").getString("text");
-                                    } catch (IOException | JSONException e) {
+                                    } catch (ExecutionException e) {
+                                        e.printStackTrace();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
+
                                 }
                                 resourceItem curr_item = new resourceItem(name, address, contact_info, "", image, distance);
                                 resourceItemList.add(curr_item);
                             }
                         }
+                        Log.d("tail resourceItemList", resourceItemList.size() + "");
                         resourceItem[] resourceItems = new resourceItem[resourceItemList.size()];
                         resourceItems = resourceItemList.toArray(resourceItems);
                         adapter = new resourceAdapter(resourceItems, SearchResources.this);
