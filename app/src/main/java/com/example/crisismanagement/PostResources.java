@@ -62,9 +62,11 @@ public class PostResources extends AppCompatActivity {
     ImageView photo;
     CheckBox food_checkbox;
     CheckBox clothing_checkbox;
-    CheckBox toiletries_checkbox;
-    CheckBox cooking_checkbox;
-    CheckBox utilities_checkbox;
+    CheckBox personal_checkbox;
+    CheckBox safety_checkbox;
+    CheckBox communication_checkbox;
+    CheckBox comfort_checkbox;
+    CheckBox pet_checkbox;
     CheckBox rating_one_checkbox;
     CheckBox rating_two_checkbox;
     CheckBox rating_three_checkbox;
@@ -102,9 +104,11 @@ public class PostResources extends AppCompatActivity {
 
         food_checkbox = (CheckBox) findViewById(R.id.selectOptionFood);
         clothing_checkbox = (CheckBox) findViewById(R.id.selectOptionClothing);
-        toiletries_checkbox = (CheckBox) findViewById(R.id.selectOptionToiletries);
-        cooking_checkbox = (CheckBox) findViewById(R.id.selectOptionCooking);
-        utilities_checkbox = (CheckBox) findViewById(R.id.selectOptionUtilities);
+        personal_checkbox = (CheckBox) findViewById(R.id.selectOptionPersonal);
+        safety_checkbox = (CheckBox) findViewById(R.id.selectOptionSafety);
+        communication_checkbox = (CheckBox) findViewById(R.id.selectOptionCommnuication);
+        comfort_checkbox = (CheckBox) findViewById(R.id.selectOptionComfort);
+        pet_checkbox = (CheckBox) findViewById(R.id.selectOptionPet);
 
         rating_one_checkbox = (CheckBox) findViewById(R.id.selectRatingOne);
         rating_two_checkbox = (CheckBox) findViewById(R.id.selectRatingTwo);
@@ -227,9 +231,11 @@ public class PostResources extends AppCompatActivity {
                 String name_str = name.getText().toString();
                 String food_check = food_checkbox.isChecked() + "";
                 String clothing_check = clothing_checkbox.isChecked() + "";
-                String toiletries_check = toiletries_checkbox.isChecked() + "";
-                String cooking_check = cooking_checkbox.isChecked() + "";
-                String utilities_check = utilities_checkbox.isChecked() + "";
+                String personal_check = personal_checkbox.isChecked() + "";
+                String safety_check = safety_checkbox.isChecked() + "";
+                String communication_check = communication_checkbox.isChecked() + "";
+                String comfort_check = comfort_checkbox.isChecked() + "";
+                String pet_check = pet_checkbox.isChecked() + "";
                 String address_str = address.getText().toString();
                 String contact_info_str = contact_info.getText().toString();
                 String rating_one_check = rating_one_checkbox.isChecked() + "";
@@ -242,9 +248,11 @@ public class PostResources extends AppCompatActivity {
                 mDatabase.child("Account").child(device_id).child(posting_str).child("Image").setValue(str_photo);
                 mDatabase.child("Account").child(device_id).child(posting_str).child("Food").setValue(food_check);
                 mDatabase.child("Account").child(device_id).child(posting_str).child("Clothing").setValue(clothing_check);
-                mDatabase.child("Account").child(device_id).child(posting_str).child("Toiletries").setValue(toiletries_check);
-                mDatabase.child("Account").child(device_id).child(posting_str).child("Cooking").setValue(cooking_check);
-                mDatabase.child("Account").child(device_id).child(posting_str).child("Utilities").setValue(utilities_check);
+                mDatabase.child("Account").child(device_id).child(posting_str).child("Personal").setValue(personal_check);
+                mDatabase.child("Account").child(device_id).child(posting_str).child("Safety").setValue(safety_check);
+                mDatabase.child("Account").child(device_id).child(posting_str).child("Communication").setValue(communication_check);
+                mDatabase.child("Account").child(device_id).child(posting_str).child("Comfort").setValue(comfort_check);
+                mDatabase.child("Account").child(device_id).child(posting_str).child("Pet").setValue(pet_check);
                 mDatabase.child("Account").child(device_id).child(posting_str).child("Address").setValue(address_str);
                 mDatabase.child("Account").child(device_id).child(posting_str).child("Contact Info").setValue(contact_info_str);
                 mDatabase.child("Account").child(device_id).child(posting_str).child("Rating One").setValue(rating_one_check);
@@ -265,9 +273,11 @@ public class PostResources extends AppCompatActivity {
                 mDatabase.child("Resources").child(posting_str).child("Image").setValue(str_photo);
                 mDatabase.child("Resources").child(posting_str).child("Food").setValue(food_check);
                 mDatabase.child("Resources").child(posting_str).child("Clothing").setValue(clothing_check);
-                mDatabase.child("Resources").child(posting_str).child("Toiletries").setValue(toiletries_check);
-                mDatabase.child("Resources").child(posting_str).child("Cooking").setValue(cooking_check);
-                mDatabase.child("Resources").child(posting_str).child("Utilities").setValue(utilities_check);
+                mDatabase.child("Resources").child(posting_str).child("Personal").setValue(personal_check);
+                mDatabase.child("Resources").child(posting_str).child("Safety").setValue(safety_check);
+                mDatabase.child("Resources").child(posting_str).child("Communication").setValue(communication_check);
+                mDatabase.child("Resources").child(posting_str).child("Comfort").setValue(comfort_check);
+                mDatabase.child("Resources").child(posting_str).child("Pet").setValue(pet_check);
                 mDatabase.child("Resources").child(posting_str).child("Address").setValue(address_str);
                 mDatabase.child("Resources").child(posting_str).child("Contact Info").setValue(contact_info_str);
                 mDatabase.child("Resources").child(posting_str).child("Rating One").setValue(rating_one_check);
@@ -327,7 +337,27 @@ public class PostResources extends AppCompatActivity {
             image.setImageBitmap(theImage);
             str_photo = BitMapToString(theImage);
             classified_category = classifyImage(theImage);
-            Toast.makeText(this, classified_category, Toast.LENGTH_SHORT).show();
+            if (classified_category.equals("Food")) {
+                food_checkbox.setChecked(true);
+            }
+            if (classified_category.equals("Personal")) {
+                personal_checkbox.setChecked(true);
+            }
+            if (classified_category.equals("Clothing")) {
+                clothing_checkbox.setChecked(true);
+            }
+            if (classified_category.equals("Safety")) {
+                safety_checkbox.setChecked(true);
+            }
+            if (classified_category.equals("Comfort")) {
+                comfort_checkbox.setChecked(true);
+            }
+            if (classified_category.equals("Communication")) {
+                communication_checkbox.setChecked(true);
+            }
+            if (classified_category.equals("Pet")) {
+                pet_checkbox.setChecked(true);
+            }
         }
     }
 

@@ -129,7 +129,7 @@
                 android:id="@+id/textView_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/selectOptionUtilities"
+                android:layout_below="@+id/selectOptionPet"
                 android:layout_alignStart="@+id/editText_Name"
                 android:layout_alignParentStart="true"
                 android:text="Address"
@@ -217,28 +217,45 @@
                 android:id="@+id/selectOptionClothing"/>
 
             <CheckBox
+                android:id="@+id/selectOptionPersonal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/selectOptionClothing"
-                android:text="Toiletries"
                 android:layout_marginStart="45dp"
-                android:id="@+id/selectOptionToiletries"/>
+                android:text="Personal" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/selectOptionToiletries"
-                android:text="Cooking Appliances"
+                android:layout_below="@+id/selectOptionPersonal"
+                android:text="Safety"
                 android:layout_marginStart="45dp"
-                android:id="@+id/selectOptionCooking"/>
+                android:id="@+id/selectOptionSafety"/>
+
+            <CheckBox
+                android:id="@+id/selectOptionCommnuication"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/selectOptionSafety"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="2dp"
+                android:text="Communication" />
+
+            <CheckBox
+                android:id="@+id/selectOptionComfort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/selectOptionCommnuication"
+                android:layout_marginStart="45dp"
+                android:text="Comfort" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/selectOptionCooking"
-                android:text="Utilities"
+                android:layout_below="@+id/selectOptionComfort"
+                android:text="Pet"
                 android:layout_marginStart="45dp"
-                android:id="@+id/selectOptionUtilities"/>
+                android:id="@+id/selectOptionPet"/>
 
             <TextView
                 android:id="@+id/textView_ratings"
