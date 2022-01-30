@@ -31,16 +31,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.crisismanagement.ml.Model;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.tensorflow.lite.support.image.TensorImage;
+import org.tensorflow.lite.support.label.Category;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+
+import kotlin.jvm.internal.Intrinsics;
 
 public class PostResources extends AppCompatActivity {
     LinearLayout items_list_layout;
@@ -68,6 +76,7 @@ public class PostResources extends AppCompatActivity {
     private LocationManager locationManager;
     private LocationListener locationListener;
     String location_str;
+    String classified_category;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -78,6 +87,7 @@ public class PostResources extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_resources);
+        classified_category = "";
         location_str = "";
         str_photo = "";
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -316,7 +326,43 @@ public class PostResources extends AppCompatActivity {
             ImageView image = (ImageView) findViewById(R.id.imageView_PhotoSlot);
             image.setImageBitmap(theImage);
             str_photo = BitMapToString(theImage);
+            classified_category = classifyImage(theImage);
+            Toast.makeText(this, classified_category, Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    public String classifyImage(Bitmap bitmap) {
+        try {
+            Model model = Model.newInstance(this);
+
+            // Creates inputs for reference.
+            TensorImage image = TensorImage.fromBitmap(bitmap);
+
+            // Runs model inference and gets result.
+            Model.Outputs outputs = model.process(image);
+            List<Category> probability = outputs.getProbabilityAsCategoryList();
+
+            Category bestMatch = null;
+            float max_score = Integer.MIN_VALUE;
+
+            for (Category curr_cat : probability) {
+                if (curr_cat.getScore() > max_score) {
+                    max_score = curr_cat.getScore();
+                    bestMatch = curr_cat;
+                }
+            }
+
+            // Releases model resources if no longer used.
+            model.close();
+
+            if (bestMatch == null) {
+                return "";
+            }
+            return bestMatch.getLabel();
+        } catch (IOException e) {
+            // TODO Handle the exception
+            e.printStackTrace();
+            return "";
         }
     }
 
