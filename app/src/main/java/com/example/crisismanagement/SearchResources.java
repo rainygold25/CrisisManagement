@@ -54,12 +54,17 @@ public class SearchResources extends AppCompatActivity {
     String API_KEY = "AIzaSyBcRVo6fkmdbqDO8chiYo3MK1Css1IseSU";
     private LocationManager locationManager;
     private LocationListener locationListener;
+    MultiSelectionSpinner spinner_select_categories;
     String curr_loc = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_resources);
+
+        spinner_select_categories = (MultiSelectionSpinner) findViewById(R.id.spinner_select_categories);
+
+        spinner_select_categories.setItems(new String[]{"Any", "Food", "Clothing", "Personal", "Safety", "Communication", "Comfort", "Pet"});
 
         resourceItemList = new ArrayList<>();
 
@@ -140,6 +145,11 @@ public class SearchResources extends AppCompatActivity {
                             all_categories.add("Pet");
                             all_categories.add("Comfort");
                             String rating = "";
+                            List<String> category_selections = spinner_select_categories.getSelectedStrings();
+                            boolean found_category = false;
+                            if (category_selections.contains("Any")) {
+                                found_category = true;
+                            }
                             Iterator<DataSnapshot> postings_iterator = dataSnapshot.getChildren().iterator();
                             boolean matches_search_text = true;
                             while (postings_iterator.hasNext() && matches_search_text) {
@@ -181,14 +191,18 @@ public class SearchResources extends AppCompatActivity {
                                     Log.d("category", bodySnapshot.getKey());
                                     if (bodySnapshot.getValue().equals("true")) {
                                         categories_present.add(bodySnapshot.getKey());
+                                        if (category_selections.contains(bodySnapshot.getKey())) {
+                                            found_category = true;
+                                        }
                                     }
+
                                 } else if (bodySnapshot.getKey().contains("Rating")) {
                                     if (bodySnapshot.getValue().equals("true")) {
                                         rating = bodySnapshot.getKey().split(" ")[1];
                                     }
                                 }
                             }
-                            if (matches_search_text) {
+                            if (matches_search_text && found_category) {
                                 Log.d("geo_location", geo_location);
                                 if (geo_location.length() > 0) {
                                     String[] lat_long_str = new String[2];
