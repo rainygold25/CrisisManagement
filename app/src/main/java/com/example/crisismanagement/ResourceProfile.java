@@ -93,7 +93,10 @@ public class ResourceProfile extends AppCompatActivity {
                 if (ContextCompat.checkSelfPermission(ResourceProfile.this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(ResourceProfile.this, new String[] {android.Manifest.permission.CALL_PHONE},
                             10);
-
+                    if (ContextCompat.checkSelfPermission(ResourceProfile.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact_information));
+                        startActivity(intent);
+                    }
                 } else {
 
 // else block means user has already accepted.And make your phone call here.
