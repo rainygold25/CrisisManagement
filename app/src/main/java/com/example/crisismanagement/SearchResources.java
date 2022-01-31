@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -127,6 +128,18 @@ public class SearchResources extends AppCompatActivity {
                             String contact_info = "";
                             String geo_location = "";
                             String distance = "";
+                            List<String> items = new ArrayList<>();
+                            List<String> quantities = new ArrayList<>();
+                            List<String> categories_present = new ArrayList<>();
+                            HashSet<String> all_categories = new HashSet<>();
+                            all_categories.add("Food");
+                            all_categories.add("Clothing");
+                            all_categories.add("Personal");
+                            all_categories.add("Safety");
+                            all_categories.add("Communication");
+                            all_categories.add("Pet");
+                            all_categories.add("Comfort");
+                            String rating = "";
                             Iterator<DataSnapshot> postings_iterator = dataSnapshot.getChildren().iterator();
                             boolean matches_search_text = true;
                             while (postings_iterator.hasNext() && matches_search_text) {
@@ -145,16 +158,33 @@ public class SearchResources extends AppCompatActivity {
                                 } else if (bodySnapshot.getKey().equals("Items")) {
                                     Iterator<DataSnapshot> items_iterator = bodySnapshot.getChildren().iterator();
                                     boolean found_item = false;
-                                    while (!found_item && items_iterator.hasNext()) {
+                                    int count = 0;
+                                    while (items_iterator.hasNext()) {
                                         DataSnapshot itemSnapshot = items_iterator.next();
+                                        String curr_value = itemSnapshot.getValue().toString();
+                                        if (count % 2 == 0) {
+                                            items.add(curr_value);
+                                        } else {
+                                            quantities.add(curr_value);
+                                        }
                                         if (itemSnapshot.getValue().toString().toLowerCase().contains(search_text.toLowerCase())) {
                                             found_item = true;
                                         } else if (search_text.toLowerCase().contains(itemSnapshot.getValue().toString().toLowerCase())) {
                                             found_item = true;
                                         }
+                                        count += 1;
                                     }
                                     if (!found_item) {
                                         matches_search_text = false;
+                                    }
+                                } else if (all_categories.contains(bodySnapshot.getKey())) {
+                                    Log.d("category", bodySnapshot.getKey());
+                                    if (bodySnapshot.getValue().equals("true")) {
+                                        categories_present.add(bodySnapshot.getKey());
+                                    }
+                                } else if (bodySnapshot.getKey().contains("Rating")) {
+                                    if (bodySnapshot.getValue().equals("true")) {
+                                        rating = bodySnapshot.getKey().split(" ")[1];
                                     }
                                 }
                             }
@@ -186,7 +216,9 @@ public class SearchResources extends AppCompatActivity {
                                     }
 
                                 }
-                                resourceItem curr_item = new resourceItem(name, address, contact_info, "", image, distance);
+                                Log.d("Categories len list", categories_present.size() + "");
+                                Log.d("Items len lst", items.size() + "");
+                                resourceItem curr_item = new resourceItem(name, address, contact_info, "", image, distance, items, quantities, categories_present, rating, geo_location);
                                 resourceItemList.add(curr_item);
                             }
                         }

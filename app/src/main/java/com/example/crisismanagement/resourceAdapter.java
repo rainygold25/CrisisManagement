@@ -1,6 +1,7 @@
 package com.example.crisismanagement;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -47,6 +48,23 @@ public class resourceAdapter extends RecyclerView.Adapter<resourceAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, curr_resourceItem.getName(), Toast.LENGTH_SHORT).show();
+                String[] items = new String[curr_resourceItem.getItems().size()];
+                String[] quantities = new String[curr_resourceItem.getQuantities().size()];
+                String[] categories = new String[curr_resourceItem.getCategories().size()];
+                items = curr_resourceItem.getItems().toArray(items);
+                quantities = curr_resourceItem.getQuantities().toArray(quantities);
+                categories = curr_resourceItem.getCategories().toArray(categories);
+                Intent intent = new Intent(context, ResourceProfile.class);
+                intent.putExtra("name", curr_resourceItem.getName());
+                intent.putExtra("address", curr_resourceItem.getAddress());
+                intent.putExtra("image", curr_resourceItem.getImage());
+                intent.putExtra("geo_location", curr_resourceItem.get_geo_location());
+                intent.putExtra("date", curr_resourceItem.getDate());
+                intent.putExtra("contact", curr_resourceItem.getContact_information());
+                intent.putExtra("items", items);
+                intent.putExtra("quantities", quantities);
+                intent.putExtra("categories", categories);
+                context.startActivity(intent);
             }
         });
     }

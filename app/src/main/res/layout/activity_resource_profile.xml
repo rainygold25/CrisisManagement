@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ResourceProfile">
+
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scroll"
+            android:fillViewport="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/postGen"
+                android:fillViewport="true"
+                >
+
+
+                <ImageView
+                    android:id="@+id/imageView_PhotoSlot"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    app:srcCompat="@drawable/ic_linked_camera_black_24dp" />
+
+                <TextView
+                    android:id="@+id/editText_Name"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageView_PhotoSlot"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="43dp"
+                    android:layout_marginEnd="-1dp"
+                    android:backgroundTint="@android:color/black"
+                    android:ems="10"
+                    android:hint="Name"
+                    android:inputType="textPersonName"
+                    android:textColorHighlight="@android:color/holo_green_light"
+                    android:textColorHint="@android:color/black"
+                    android:textColorLink="@android:color/holo_green_light" />
+
+                <TextView
+                    android:id="@+id/editText_Address"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView_address"
+
+                    android:layout_alignParentEnd="true"
+
+                    android:backgroundTint="@android:color/black"
+                    android:ems="10"
+                    android:hint="Address"
+                    android:inputType="textPostalAddress"
+                    android:textColorLink="@android:color/holo_green_light" />
+
+                <TextView
+                    android:id="@+id/editText_ContactInfo"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView_contact"
+                    android:layout_alignParentEnd="true"
+                    android:backgroundTint="@android:color/black"
+                    android:ems="10"
+                    android:hint="Contact Information"
+                    android:inputType="phone"
+                    android:textColorLink="@android:color/holo_green_light" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_alignTop="@+id/editText_Address"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toStartOf="@+id/editText_Address"
+                    app:srcCompat="@drawable/ic_edit_location_black_24dp" />
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/editText_ContactInfo"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toStartOf="@+id/editText_ContactInfo"
+                    app:srcCompat="@drawable/ic_call_black_24dp" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/editText_Name"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@+id/editText_Name"
+                    app:srcCompat="@drawable/ic_person_black_24dp" />
+
+                <TextView
+                    android:id="@+id/textView_Name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="215dp"
+                    android:text="Name"
+                    android:textColor="@android:color/holo_green_dark" />
+
+                <TextView
+                    android:id="@+id/textView_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/listCategories"
+                    android:layout_alignStart="@+id/editText_Name"
+                    android:layout_alignParentStart="true"
+                    android:text="Address"
+                    android:textColor="@android:color/holo_green_dark" />
+
+                <TextView
+                    android:id="@+id/textView_contact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_below="@+id/editText_Address"
+                    android:layout_alignStart="@+id/editText_Name"
+
+                    android:layout_alignParentStart="true"
+                    android:text="Contact Information"
+                    android:textColor="@android:color/holo_green_dark" />
+
+                <TextView
+                    android:id="@+id/textView_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_below="@+id/editText_ContactInfo"
+
+                    android:layout_alignStart="@+id/editText_Name"
+                    android:layout_alignParentStart="true"
+                    android:text="Items"
+                    android:textColor="@android:color/holo_green_dark" />
+
+                <com.example.crisismanagement.NonScrollListView
+                    android:id="@+id/linearLayout_itemsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView_item"
+                    android:layout_marginTop="5dp" />
+
+                <TextView
+                    android:id="@+id/textResource"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editText_Name"
+                    android:text="Resource Type" />
+
+                <com.example.crisismanagement.NonScrollListView
+                    android:id="@+id/listCategories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textResource"
+                    android:layout_marginTop="3dp" />
+
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+</RelativeLayout>
