@@ -36,13 +36,27 @@
         android:id="@+id/textView_category_label"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Distance:"
+        android:layout_below="@+id/spinner_select_categories"
+        android:id="@+id/textView_distance_label"
+        />
 
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinner_select_categories"
+        android:id="@+id/spinner_select_distance"
+        android:layout_toRightOf="@id/textView_distance_label"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_items"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/spinner_select_categories"
+        android:layout_below="@id/spinner_select_distance"
         />
 
 </RelativeLayout>

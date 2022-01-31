@@ -17,8 +17,10 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +34,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -55,6 +58,7 @@ public class SearchResources extends AppCompatActivity {
     private LocationManager locationManager;
     private LocationListener locationListener;
     MultiSelectionSpinner spinner_select_categories;
+    Spinner spinner_select_distance;
     String curr_loc = "";
 
     @Override
@@ -63,8 +67,13 @@ public class SearchResources extends AppCompatActivity {
         setContentView(R.layout.activity_search_resources);
 
         spinner_select_categories = (MultiSelectionSpinner) findViewById(R.id.spinner_select_categories);
+        spinner_select_distance = (Spinner) findViewById(R.id.spinner_select_distance);
 
         spinner_select_categories.setItems(new String[]{"Any", "Food", "Clothing", "Personal", "Safety", "Communication", "Comfort", "Pet"});
+        spinner_select_categories.setSelection(new String[]{"Any"});
+
+        ArrayAdapter<String> distances_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"Any", "1 mile", "3 miles", "5 miles"});
+        spinner_select_distance.setAdapter(distances_adapter);
 
         resourceItemList = new ArrayList<>();
 
@@ -146,6 +155,7 @@ public class SearchResources extends AppCompatActivity {
                             all_categories.add("Comfort");
                             String rating = "";
                             List<String> category_selections = spinner_select_categories.getSelectedStrings();
+                            String distance_selection = spinner_select_distance.getSelectedItem().toString();
                             boolean found_category = false;
                             if (category_selections.contains("Any")) {
                                 found_category = true;
@@ -204,7 +214,16 @@ public class SearchResources extends AppCompatActivity {
                             }
                             if (matches_search_text && found_category) {
                                 Log.d("geo_location", geo_location);
+                                boolean within_radius = false;
+                                if (distance_selection.equals("Any")) {
+                                    within_radius = true;
+                                }
                                 if (geo_location.length() > 0) {
+                                    HashMap<String, Integer> str_to_miles = new HashMap<>();
+                                    str_to_miles.put("1 mile", 1);
+                                    str_to_miles.put("3 miles", 3);
+                                    str_to_miles.put("5 miles", 5);
+
                                     String[] lat_long_str = new String[2];
                                     lat_long_str = geo_location.split(" ");
                                     //TODO: calculate distance
@@ -221,6 +240,17 @@ public class SearchResources extends AppCompatActivity {
                                         String result = da.execute(url).get();
                                         JSONObject jsonObject = new JSONObject(result);
                                         distance = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("distance").getString("text");
+                                        String distance_digits = distance.split(" ")[0];
+                                        String distance_parsable_digits = "";
+                                        for (int i = 0; i < distance_digits.length(); i += 1) {
+                                            if (distance_digits.charAt(i) != ',') {
+                                                distance_parsable_digits += distance_digits.charAt(i);
+                                            }
+                                        }
+                                        double num_miles = Double.parseDouble(distance_parsable_digits);
+                                        if (!distance_selection.equals("Any") && num_miles <= str_to_miles.get(distance_selection)) {
+                                            within_radius = true;
+                                        }
                                     } catch (ExecutionException e) {
                                         e.printStackTrace();
                                     } catch (InterruptedException e) {
@@ -229,11 +259,15 @@ public class SearchResources extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
 
+                                } else {
+                                    within_radius = true;
                                 }
                                 Log.d("Categories len list", categories_present.size() + "");
                                 Log.d("Items len lst", items.size() + "");
                                 resourceItem curr_item = new resourceItem(name, address, contact_info, "", image, distance, items, quantities, categories_present, rating, geo_location);
-                                resourceItemList.add(curr_item);
+                                if (within_radius) {
+                                    resourceItemList.add(curr_item);
+                                }
                             }
                         }
                         Log.d("tail resourceItemList", resourceItemList.size() + "");
